@@ -1,0 +1,162 @@
+Delegate:- Its a type safe function pointer.
+           A delegate holds the reference of a method and then calls the method for execution.
+          To call a method by using a delegate we have 3 steps:
+          1. Define a delegate
+             [<modifiers>] delegate <return type> <Name>([<parameter list>])
+          2. It should define under namespace and inside the class also.
+          3. Instanciating the delegates.And call the delegate by passing required parameter values ,
+             so that internally the method which is bound with the delegate gets executed.  
+ 
+Types Of Delegate  :- Two types of delegate 
+                      1.Singlecast Delegate 
+                      2.Multicast Delegate
+
+Generic Delegate:-    There are some predefined generic delegate
+                       1. Func delegate :- Func can contains 0 to 16 input parameters and must have one return type.
+                       2. Action Delegate :- Action can contain 1 to 16 input parameters and does not have any return type.
+                       3. Predicate Delegate  :- Predicate delegate should satisfy some criteria of method and must have 
+                          one input parameter and one Boolean return type either true or false.
+
+Note :- 1.the return type of delegates should be same as the return type of method 
+          and the paramater is also should be same of delegate  as method parameter.
+        2. A member of non static method never can be accessed directly from static member.
+           it can be accessed by only using the instance of the class.
+           
+----------------------------------------------------------------------------------------------------
+Example :-
+  namespace DelegatePrograms
+  {
+    public delegate void AddNumDelegate(int a,int b);
+    public delegate string SayHelloDelegate(string name);
+    class Program
+    {
+      public void AddNums(int a , int b)
+      {
+         Console.WriteLine(a+b);
+      }
+       
+      public static string SayHello(string name)
+      {
+         return "Hello! "+name;
+      }
+       static void Main(string[] args)
+       {
+         Program p = new Program();
+         // calling function simply
+         //p.AddNums(90,10);
+         //string value = p.SayHello("Raju");
+         //Console.WriteLine(value);
+      
+         //now using delegate
+         //AddNumDelegate nd = new AddNumDelegate(AddNums);     //A member of non static method never can be accessed directly from static member.
+                                                             
+         AddNumDelegate nd = new AddNumDelegate(p.AddNums);     // it can be accessed by only using the instance of the class.
+         
+         SayHelloDelegate hd = new SayHelloDelegate(SayHello);  // and its a static then it can be directly accessed.
+                                                                // now nd and hd hold the reference or addresss of the methods 
+         //call the methods
+          
+            nd.Invoke(90,10) // or nd(90,10);
+            string str = hd.Invoke("ABDVilliars");     or //hd("ABDVilliars");
+            Console.WriteLine(str);        
+         
+       }
+    }
+  }
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+Multicasting of a Delegate:-
+          Delegate objects can be composed using the "+" operator. A composed delegate calls the two delegates it was composed from. 
+          Only delegates of the same type can be composed.The "-" operator can be used to remove a component delegate from a composed delegate.
+          Using this property of delegates you can create an invocation list of methods that will be called when a delegate is invoked.
+          This is called multicasting of a delegate. The following program demonstrates multicasting of a delegate −
+
+using System;
+
+delegate int NumberChanger(int n);
+namespace DelegateAppl {
+   class TestDelegate {
+      static int num = 10;
+      
+      public static int AddNum(int p) {
+         num += p;
+         return num;
+      }
+      public static int MultNum(int q) {
+         num *= q;
+         return num;
+      }
+      public static int getNum() {
+         return num;
+      }
+      static void Main(string[] args) {
+         //create delegate instances
+         NumberChanger nc;
+         NumberChanger nc1 = new NumberChanger(AddNum);
+         NumberChanger nc2 = new NumberChanger(MultNum);
+         
+         nc = nc1;
+         nc += nc2;
+         
+         //calling multicast
+         nc(5);
+         Console.WriteLine("Value of Num: {0}", getNum());
+         Console.ReadKey();
+      }
+   }
+}
+-------------------------------------------------------------------------------
+Generic Delegate:-
+----------------
+namespace DelegateProgram
+{
+   //public delegate double Dlelgate1(int x,int y,int z);
+   //public delegate void Delegate2(int x,int y,int z);
+   //public delegate bool Delegate3(string str);
+   class GenericDelegate
+   {
+   
+     public static double AddNums1(int a,int b,int c)
+     {
+        return a+b+c;       
+     }
+     
+     public static void AddNums2(int a,int b,int c)
+     {
+        Console.WriteLine(a+b+c);      
+     }
+     
+     public static bool CheckLength(string str)
+     {
+        if(str.length>5)
+          return true;
+        else
+           return false;       
+     }
+     public static void Main(string[] args)
+     {
+       //Delegate1 obj1 = AddNums1;
+       //double result = obj1.Invoke(100,84.5f,193.455);
+       //Console.writeLine(result);
+
+       //Delegate2 obj2 = AddNums2;
+       //obj2.Invoke(100,79.3f,20.345);
+   
+       //Delegate3 obj3 = CheckLength();
+       //bool result = obj3.Invoke("Hello World");
+       //Console.WriteLine(result);
+       
+       //Now using generic delegates instead of custom delegates
+        Func<int,float,double,double> obj1 = AddNums1();        // Func<input,input,input,output>
+        double result = obj1.Invoke(100,84.5f,193.455);
+        Console.WriteLine(result);
+       
+        Action<int,double,float> obj2 = AddNums2();            //Action(input,input....) not output
+        obj2.Invoke(100,84.5f,193.455);
+       
+        Predicate<string> obj3 = CheckLength();               Predicate<input,input..., output(not compulsary to write)>
+        obj3.Invoke("Hello World");
+     }
+   }
+}
+

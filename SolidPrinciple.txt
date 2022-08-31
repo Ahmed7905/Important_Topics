@@ -1,0 +1,396 @@
+Solid Principle :- 
+ i. TO achieve loose coupling , because tight coupling makes reuseability difficult ,
+    And tight coupling makes the classes in the code dependent on each other.
+ ii. Changes can be requested anytime and it can be break existing code. 
+ ii. is used to achieve more sustainable, more reusability ,and scalibility etc
+--------------
+     S => Single Responsibility Principle (means a class should have only one reason to change or class should have only job)
+     O => Open/Closed Principle
+     L => Liskov Substitution Principle
+     I => Interface Sagregation Principle
+     D => Dependency Inversion Principle
+  
+1.Single Responsibility Principle :-
+-------------------------------------
+
+public class UserService
+{
+  public void Register(string email, string password)
+  {
+      var emailService = new EmailService();
+      if(!emailService.ValidateEmail(email))
+           throw new ValidationException("Invalid email")
+      var user = new User(email,password);
+      emailService.SendEmail(user);
+  }
+  public void Login(string email,string password)
+  {
+    console.WriteLine("login");
+  }
+   
+  // should be done seperatly to achieve SRP
+   
+  //public virtual bool ValidateEmail(string email)
+  // {
+  //  return email.Contains("@");
+  // }
+  // public void SendEmail(user message)=> Console.WriteLine("Send Message");
+}
+
+//Not to do all email work in same class we should use diffn class to achieve SRP
+
+public class EmailService
+{
+  public virtual bool ValidateEmail(string email)
+  {
+    return email.Contains("@");
+  }
+  public void SendEmail(user message)=> Console.WriteLine("Send Message");
+}
+
+_________________________________________________________________________________________________________________
+
+2. Open/Closed Principle :- means open for Extension but closed for modification
+---------------------
+  public class Rectangle:IArea
+  {
+    public double Height{get;set;}
+    public double Width{get;set;}
+    public double Area() => Height * Width
+  }
+
+  public class Circle:IArea
+  {
+    public double Radius;
+    public double Area() => Math.PI * Radius * Radius;
+  }
+
+
+  public interface IArea
+  {
+     public double Area();
+  }
+
+ public class AreaCalculator
+   {
+     public double TotalArea(object[] arrObject)
+     {
+       double area = 0;
+       foreach(var obj in arrObjects)
+        {
+          //Avoid to do these things in main class to achieve Open/Closed Priciple and make closed for modification  and open extension 
+           (if we make another class for ex. Triangle then we can add and calculate area).
+          //if(obj is Rectangle)
+          // {
+          //    var objRectangle = (Rectangle)obj;
+          //    area + = objRectangle.Height * objRectangle.Width;
+          // }
+          // else
+          // {
+          //    var objCircle = (Circle)obj;
+          //   area+ = objCircle.Radius * objCircle.Radius * Math.PI;
+          // }
+
+           area + =obj.Area();
+        }
+        return area;      
+     }
+   }
+__________________________________________________________________________________________________________________
+
+3. Liskov Substitution Principle :- Objects in a program should be raplaceable with instance of their sub types without altering
+--------------------------------
+   altering the correctness of that program.   
+   (We should be ablie use to any drived class insead of parent class and have it behave in the same manner without modification)
+
+   public class File : ILoad, IWrite  // the base class can implemented ILoad and IWrite interface
+   {
+     public string LoadText()
+     {
+        return string.Empty;
+     }
+     public void SaveText()
+     {
+         
+     }
+   }
+
+  public class ReadOnlyFile:ILoad        // not to need implement File
+  {
+    public string FilePath {get;set;}
+    public strng FileText {get;set;}
+    public string LoadTExt()
+    {
+      return "Read only file";
+    }
+    
+     // And not need to use SaveText() method
+     //public void SaveText()
+     //{
+     //   throw new Exception("Can't save")   
+     //}
+  }
+
+
+  
+  public class ReadWriteFile:ILoad,IWrite        // not to need implement File
+  {
+    public string FilePath {get;set;}
+    public strng FileText {get;set;}
+    public string LoadText()
+    {
+      return "Read only file";
+    }
+    
+     // And not need to use SaveText() method
+     //public void SaveText()
+     //{
+     //   throw new Exception("Can't save")   
+     //}
+  }
+
+
+   public class SqlFieManager
+   {
+     //public List<File> allFiles {get;set;}   now use ILoad and IWrite
+       public List<ILoad> allFiles {get;set;} 
+       public List<IWrite> witeFiles {get;set;}            
+
+     public string GetTextFromFiles()
+     {
+       StringBuilder objStrBuilder = new StringBuilder();
+       foreach(var objFile in allFiles)
+       { 
+         objStrBuilder.Append(objFile.LoadText());  
+       }
+       
+       return objBuilder.ToString();
+     }
+     
+     public void SaveTextIntoFiles()
+     {
+         foreach(var objFile in writeFiles)
+         {
+            //if(!(objFile is ReadOnlyFile))    // here we have given the condition and its not meet the parent class ,
+            //which voilates the Liskov Substitution Principle.
+            
+            objFile.SaveText();    // not need to check any special condition and now any file that has implemented Iwrite interface will have SaveText() method   
+         }
+      }
+   }
+
+   Note :- Now as we can see without having any extra code and any special condition 
+           the child classes are able to sustitute the parent classes And this is how we implemented Liskov Substitution Principle.
+
+// so we need to use interface 
+   public interface IWrite
+   {
+      void SaveText(); 
+   }
+ 
+   
+   public interface ILOad
+   {
+      string LoadText(); 
+   }
+
+
+__________________________________________________________________________________________________________________________________
+
+4. Interface Sagregation Principle :-
+--------------------------------   
+    Many client-specific interfaces are better than one condition general-purpose interface
+   (Instead of making big interface we will make chunks of small interfaces)
+   Note :- Interface Sagregation Principle helps in achieving the Liskov Substitution Principle
+
+  public interface ICreate
+  {
+    void CreateTask();
+  }
+ 
+  
+  public interface IAssign
+  {
+    void AssignTask();
+  }
+   
+  public interface IWork
+  {
+    void WorkOnTask();
+  }
+   
+ // small interfaces intead of a big interfaces  
+ // public interface ILead
+ // {  
+ //   void CreateTask();
+ //   void AssignTask();
+ //   void WorkOnTask();
+ // }
+    
+
+ public class Lead:IWork,IAssign,ICreate
+ {
+   publc void assignTask()
+   {
+    
+   }
+    
+     publc void createTask()
+   {
+    
+   }
+    
+    publc void workOnTask()
+   {
+    
+   }
+ }
+
+ 
+ public class Manager:IAssign,ICreate
+   //ILead  
+   // but manager can not work on the task , so we can't implement this method and withut implementing
+   // this method we can not implement interface and this is also voilating the Liskov substitution principle
+ {
+   publc void assignTask()
+   {
+     
+   }
+    
+     publc void createTask()
+   {
+    
+   }
+    
+   // publc void workOnTask()
+   //{
+   //}
+ }
+
+  //ILead
+  // but developer can not assign the task , so we can't implement this method and withut implementing
+  // this method we can not implement interface and this is also voilating the Liskov substitution principle
+  
+  // but m can not create the task , so we can't implement this method and withut implementing
+  // this method we can not implement interface and this is also voilating the Liskov substitution principle.
+  Note :- Then the Interface Segregation comes. 
+  
+ 
+  public class Developer:IWork
+  {
+   //publc void assignTask()
+   // {
+   // }
+    
+   // publc void createTask()
+   // {
+   // }
+    
+    publc void workOnTask()
+   {
+      // will implement easily
+   }
+ }
+
+_________________________________________________________________________________________________________________
+
+5. Dependency Inversion Principle :-
+----------------------------------
+  One should depends upon abstractions not concretions
+  (Basically high level classes should not aware of low level classes implementation)
+ 
+public class FileLogger:ILog
+ {
+    public void Log(string message)
+    {
+      Console.WriteLine("Inside log method of FieLogger");
+      LogFile(message);
+    }
+    
+   private void LogToFile(string message)
+   {
+    Console.writeLine("Method: LogToFile , Text:{0}",message);
+   }
+ }
+
+  public class DatabaseLogger:ILog
+ {
+    public void Log(string message)
+    {
+      Console.WriteLine("Inside log method of DatabaseLogger");
+      LogFile(message);
+    }
+    
+   private void LogToDatabase(string message)
+   {
+    Console.writeLine("Method: LogToDatabase , Text:{0}",message);
+   }
+ }
+
+ public class ProductService
+ {
+   //private readonly FileLogger _fileLogger = new FileLogger(); // instead of doing this we will use interface to achieve Dependency Inversion Principle 
+   //private readonly DatabaseLogger_databaseLogger = new DatabaseLogger();
+ 
+   private readonly ILog _log;
+  
+   //public void LogToFile(string message)
+   //{
+   //   _fileLogger.Log(message);
+  // }
+   
+  //  public void LogToDatabase(string message)
+  // {
+  //    _databaseLogger.Log(message);
+  // }
+     
+   public ProductService(ILog log)
+   {
+      _log  = log; 
+   }
+   
+    public void Log(string message)
+    {
+       _log.Log(message); // here will both type of log will use like database logger and file logger
+    }
+ }
+
+
+// now we should use Interface and needs to implemented by FileLogger and Database Logger
+   public interface ILog
+   {
+     void Log(string message);  
+   }
+ 
+ // And we will use this from Program.cs
+ 
+   Class Program
+   {
+     public void Main(string[] args)
+     {
+       ILog objLog = new DatabaseLogger();
+       //ILOg objLog = new FileLogger();
+       var pdService = new ProductService(objLog);
+       pdService.Log("Hello");
+        
+     }
+   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

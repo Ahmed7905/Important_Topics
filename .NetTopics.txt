@@ -1,0 +1,67 @@
+1.)Net Framework :- .NET Framework is the original implementation of .NET. It supports running websites, services, desktop apps, and more on Windows.
+2.) .Net :- .NET is a cross-platform implementation for running websites, services, and console apps on Windows, Linux, and macOS.
+            .NET Standard is a formal specification of the APIs that are common across .NET implementations. 
+            This allows the same code and libraries to run on different implementations.
+
+2.)Architecture of .Net Framework :-
+  _____________________________
+The two major components of .NET Framework are the 'Common Language Runtime' and the '.NET Framework Class Library'.
+
+The Common Language Runtime (CLR) is the execution engine that handles running applications. 
+It provides services like thread management, garbage collection, type-safety, exception handling, and more.
+The Class Library provides a set of APIs and types for common functionality. 
+It provides types for strings, dates, numbers, etc. The Class Library includes APIs for reading and writing files,
+ connecting to databases, drawing, and more.
+
+3.)What is Entity Framework Core?
+  _______________________________
+Entity Framework (EF) Core is an ORM (Object-Relational Mapper) Framework for data access in .Net. 
+It was released along with .NET Core and is an extensible, lightweight, Open Source, 
+and cross-platform version of Entity Framework data access technology. It works on multiple operating systems like Windows, Mac, and Linus.
+
+4.)What is ORM?
+  ______________
+The term ORM stands for Object-Relational Mapper and it automatically creates classes based on database tables and the vice versa is also true.
+That is, it can also generate the necessary SQL to create the database based on the classes.
+
+As a developer, we mostly work with the application business objects and the ORM Framework generates the necessary SQL (to perform the CRUD operation)
+that the underlying database can understand. So, in simple words, we can say that the ORM Framework eliminates the need 
+for most of the data access code that as a developer we generally write.
+
+5.)Why do we need to use an ORM?
+   _____________________________
+Let us understand why we need to use the ORM Framework with an example.
+
+Suppose we want to develop an application to manage the students of a college. In order to do this, we may 
+need to create classes such as Student, Department, Address, etc. Technically we called these classes as Domain classes.
+
+Without using ORM Framework like Entity Framework or EF Core, we have to write lots of data access code to perform the 
+CRUD operations i.e. store and retrieve the Student, Department and Address data from the underlying database tables.
+
+For example, in order to perform CRUD operations i.e. read, insert, update or delete from a database table, 
+we generally need to write custom code in our application to generate the required SQL statements which can be understood by the 
+underlying database. Again, when we want to read the data from the database into our application, then also we have to write some 
+custom code to map the database data to our model classes like Student, Department, Address, etc. This is a very common task as a 
+developer for us that we do almost in every application.
+
+6.)Entity Framework Core supports two development approaches. They are as follows:
+  _______________________________________________________________________________
+
+Code-First Approach
+Database-First Approach
+EF Core mainly targets the code-first approach and provides little support for the database-first approach at the moment.
+
+1.)EF Core Code First Approach:
+________________________________
+In the EF Core Code First Approach, first, we need to create our application domain classes such as Student, Branch, 
+Address, etc. and a special class that derives from Entity Framework DbContext class. 
+Then based on the application domain classes and DBContext class, the EF Core creates the database and related tables.
+
+Out of the box, in the code-first approach, the EF Core API creates the database and tables using migration 
+based on the default conventions and configuration. If you want then you can also change the default conventions 
+used to create the database and its related tables. This approach is useful in Domain-Driven Design (DDD).
+
+2.)EF Core Database First Approach:
+____________________________________
+If you have an existing database and database tables are already there, then you need to use the EF Core Database First Approach.
+ In the database-first approach, the EF Core creates the DBContext and Domain classes based on the existing database schema using EF Core Command.

@@ -1,0 +1,140 @@
+Dependency Injection  :-  
+--------------------
+1. Dependency Injection (DI) is the technique to achieve IOC (Inversion of control)
+ And Inversion of control means we need to make our code loosely coupled. And in future is there
+ any change , is easy to implement.
+
+2. Asp.Net Core provides the built-in supports for DI.
+3. Depedencies are registered in containers , and the container in asp.net core is IServiceProvider.
+   during the registration we register in the IServiceCollection but when the services get resolved
+   we worked on IServiceProvider. And this IServiceProvider is internally used by Asp.Net Core Framework.
+4. Services are typically registered in the application's Startup.ConfigureServices method.
+
+Advantages :- 1.Looslely coupling between controller and repositories.
+              2.Controller does not create the instance of repository rather than it is created by DI Container.
+              3.Controler does not define the implementation of repository. Only the interface of this repositry        
+                is used in the controller. This makes the easy to change the implementation of repository without modifying
+                the controller class.
+ 
+Services Lifetime :-
+-----------------
+i.Transient (AddTransient<>) :- A new instance of the service will be created every time it is required (Create new instance of class per container).
+ii.Scoped (AddScoped<>) :- These are created once per client request (only one instance of container).
+iii.Singleton (AddSingleton<>) :- Same instance for the entire application (global).
+
+---------------------------------------------------------------------------------
+public interface IBookRepository
+{
+    Task<int> AddNewBook(BookModel model);
+    Task<List<BookModel>> GetAllBooks();
+}
+
+ public interface ILanguageRepository
+ {
+    Task<int> AddNewLanguage(LanguageModel model);
+    Task<List<LanguageModel>> GetAllLanguages();
+ }
+
+public class BookRepository:IBookRepository
+{
+   private readonly BookStoreContext _context = null;
+   public BookRepository(BookStoreContext context)
+    {
+      _context = context;   
+    }
+    public async Task<int> AddNewBook(BookModel model)
+     {
+       // code to add new books
+     }
+    public async Task<List<BookModel>> GetAlBooks()
+    {
+       // code to get all books
+    }
+}
+
+  public class LanguageRepository:ILanguageRepository
+ {
+   private readonly LanguageStoreContext _context = null;
+   public LanguageRepository(LanguageStoreContext context)
+    {
+      _context = context;   
+    }
+    public async Task<int> AddLanguageBook(LanguageModel model)
+     {
+       // code to add new language
+     }
+    public async Task<List<LanguageModel>> GetAllLanguages()
+    {
+       // code to get all languages
+    }
+}
+
+//now register these services in the containers
+
+public class StartUp
+{
+
+  public void ConfigureServices(IServiceCollection services)
+  {
+
+    services.AddDbContext<>();
+    services.AddScoped<IBookRepository,BookRepository>();
+    services.AddScoped<ILanguageRepository,LanguageRepository>();
+  }  
+
+}
+
+public class BookController : Controller
+{
+  IBookRepository _bookRepository
+  ILanguageRepository _languageRepository
+  BookController(IBookRepository bookRepository)
+  {
+      _bookRepository = bookRepository;
+      _languageRepository = languageRepository;
+  }
+   [Route("save-book")]
+   public async Task<int> AddBooks(BookModel model)
+   {
+      return _bookRepository.AddNewBook(model);
+   }
+  
+   [Route("get-books")]
+   public async Task<List<BookModel>> GetBooks()
+   {
+      var booksList =  _bookRepository.GetAllBooks();
+      retur bookList;
+   }
+    
+}
+
+
+public class LanguageController : Controller
+{
+  IBookRepository _bookRepository
+  ILanguageRepository _languageRepository
+  BookController(ILanguageRepository languageRepository)
+  {
+      //_bookRepository = bookRepository;
+      _languageRepository = languageRepository;
+  }
+   [Route("save-language")]
+   public async Task<int> AddLanguages(LanguageModel model)
+   {
+      return _languageRepository.AddNewLanguage(model);
+   }
+  
+   [Route("get-languages")]
+   public async Task<List<LanguageModel>> GetLanguages()
+   {
+      var languageList =  _languageRepository.GetAllLanguages();
+      retur languageList;
+   }
+    
+}
+
+
+
+
+
+

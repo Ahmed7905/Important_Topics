@@ -1,0 +1,88 @@
+1. Entity Framework
+     DBContext Class
+   i) An Object relational mapper (ORM).
+   ii)Translates our codes into SQl commands that updates our tables in the database.
+   
+   
+ DbContext :- is an important class in Entity framework API.It is a bridge between your domain or entity classes and the database. 
+              It gives a constructor where class is initiated.
+ base : is a class is used to create ,or drive other other classes.
+  
+[ApiController] :- this signifies that thee particular class is of type API Controller.
+  
+ControllerBase :- The ControllerBase class provides the necessary integration with routing and HttpContext so that you can leverage them. 
+                    It also contains the code required for managing ViewData and TempData.
+				
+App route :- this is an angular component that's going to be loaded into the body of our index to HTML when our app is running.
+
+Decorators:- typescript supports decorators and this is a way of giving a normal class some extra powers and giving our class the ability to be an angular component.
+
+Router-outlet :-in Angular works as a placeholder which is used to load the different components dynamically based on the activated component or current route state.		
+Angular Modules:- Modules are the collection of the Components, Service directives, and Pipes which are related such that they can be combined to form a module.
+                  In a more simple way, we can imagine the Modules as the packages we use in the C# which are self-contained set of the classes and methods.
+HttpClientModule:- HttpRequest represents an outgoing request, including URL, method, headers, body, and other request configuration options.
+
+OnInit:- a lifecycle hook that is called after angular has initialized all data bound properties of a direction to handle ay addtional initialization tasks.
+         and required to implement ngOnInit() method.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------		 
+Subscription:- means an arrangement to receive something. Similarly, in Angular applications Observables will be connected to observers and whenever they observe a new value or change in data.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Cross-origin resource sharing (CORS) :-is a browser security feature that restricts cross-origin HTTP requests that are initiated from scripts running in the browser. If your REST API's resources
+              receive non-simple cross-origin HTTP requests, you need to enable CORS support.
+			  AddCORS:- services.AddCors();
+          and inBetween appUseRouting and appUseEndPoint
+          app.UseCors(x=>x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200"));
+		  
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+PasswordHash :- The data protection code base includes a package Microsoft.AspNetCore.Cryptography.KeyDerivation which contains cryptographic key derivation functions. This package is a standalone component
+                  and has no dependencies on the rest of the data protection system. It can be used completely independently. The source exists alongside the data protection code base as a convenience.
+				  
+				  PasswordSalt :-
+				  
+
+observables	:-Angular makes use of observables as an interface to handle a variety of common asynchronous operations. For example:
+             i.You can define custom events that send observable output data from a child to a parent component.
+             ii.The HTTP module uses observables to handle AJAX requests and responses.
+             iii.The Router and Forms modules use observables to listen for and respond to user-input events.
+	-----------------------------------------------------------------------------------------------------------------------------------------------------	  
+			    Observables                                                                               	Promises
+   Emit multiple values over a period of time.	                                               Emit a single value at a time.
+   Are lazy: they’re not executed until we subscribe to them using the subscribe() method.	   Are not lazy: execute immediately after creation.
+   Have subscriptions that are cancellable using the unsubscribe() method, which stops the     
+   listener from receiving further values.                                                     Are not cancellable.
+   Provide the map for forEach, filter, reduce, retry, and retryWhen operators.                Don’t provide any operations.       
+   -------------------------------------------------------------------------------
+   
+   Parent to Child and Child to parent Communication
+   
+   Note :- When we are receiving the data from a parent that goes in square brackets
+           when we're sending data from a chi,d , this goes in parantheses as in it's an output.
+ ----------------------------------------------------------------------------------------------
+ 
+		   for AutoMapper install folowing package :-
+		            AutoMapper.Extension.Microsoft.DependencyInjection.
+					
+		    services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+	
+-------------------------------------------------------------------------------------------------------
+	Reactive Forms And Validations:-
+
+ngOnInit()
+{
+this.initializedForm();
+}
+
+initializedForm()
+  {
+     this.registerForm() = new FormGroup({
+	   username: new FormControl('',Validatiors.required),
+	    password: new FormControl('',[Validatiors.required,Validators.minLength(4),Validations.maxLength(8)]),
+	    ConfirmPassword: new FormControl('',[Validatiors.required,Validators.minLength(4),Validations.maxLength(8)]),
+
+	 })
+  }
+----------------------------------------------------------------------
+To Install Bootstrap in Angular :-
+
+   ng add @ng-bootstrap/ng-bootstrap
